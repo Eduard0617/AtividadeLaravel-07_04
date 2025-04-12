@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Ingrediente extends Model
+class Livros extends Model
 {
     protected $fillable = [
-        'nome',
-        'quantidade',
+        'titulo',
+        'autor',
+        'numPaginas',
     ];
 }

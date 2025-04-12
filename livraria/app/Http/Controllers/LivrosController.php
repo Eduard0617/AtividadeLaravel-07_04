@@ -2,21 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Ingrediente;
+use App\Models\Livros;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Validator;
 
-class IngredienteController extends Controller
+class LivrosController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $ingredientes = Ingrediente::all();
-        return response()->json($ingredientes);
+        $livros = Livros::all();
+        return response()->json($livros);
     }
 
     /**
@@ -25,8 +25,9 @@ class IngredienteController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nome' => 'required',
-            'quantidade' => 'required|numeric'
+            'titulo' => 'required',
+            'autor' => 'required',
+            'numPaginas' => 'required|numeric'
         ]);
 
         if ($validator->fails()) {
@@ -37,33 +38,35 @@ class IngredienteController extends Controller
             ], 400);
         }
 
-        $ingrediente = Ingrediente::create($request->all());
+        $livros = Livros::create($request->all());
 
         return response()->json([
             'success' => true,
-            'message' => 'Ingrediente cadastrado com sucesso!',
-            'data' => $ingrediente
+            'message' => 'Livro cadastrado com sucesso!',
+            'data' => $livros
         ], 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Ingrediente $ingrediente)
+    public function show(Livros $livro)
     {
-        return response()->json($ingrediente);
+        return response()->json($livro);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Ingrediente $ingrediente)
+    public function update(Request $request, Livros $livro)
     {
         $validator = Validator::make($request->all(), [
-            'nome' => 'required',
-            'quantidade' => 'required|numeric'
+            'titulo' => 'required',
+            'autor' => 'required',
+            'numPaginas' => 'required|numeric'
         ]);
-
+    
+        // Verifica se a validação falhou
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
@@ -71,39 +74,44 @@ class IngredienteController extends Controller
                 'errors' => $validator->errors()
             ], 400);
         }
-
-        $ingrediente->nome = $request->nome;
-        $ingrediente->quantidade = $request->quantidade;
-
-        if ($ingrediente->save()) {
+    
+        // Atualizando os dados do livro
+        $livro->titulo = $request->titulo;
+        $livro->autor = $request->autor;
+        $livro->numPaginas = $request->numPaginas;
+    
+        // Tentando salvar as alterações
+        if ($livro->save()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Ingrediente atualizado com sucesso!',
-                'data' => $ingrediente
+                'message' => 'Livro atualizado com sucesso!',
+                'data' => $livro
             ], 200);
         }
-
+    
+        // Caso ocorra algum erro ao salvar
         return response()->json([
             'success' => false,
-            'message' => 'Erro ao atualizar o ingrediente'
+            'message' => 'Erro ao atualizar o livro'
         ], 500);
     }
+    
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Ingrediente $ingrediente)
+    public function destroy(Livros $livro)
     {
-        if ($ingrediente->delete()) {
+        if ($livro->delete()) {
             return response()->json([
                 'success' => true,
-                'message' => 'Ingrediente deletado com sucesso'
+                'message' => 'livro deletado com sucesso'
             ], 200);
         }
 
         return response()->json([
             'success' => false,
-            'message' => 'Erro ao deletar o ingrediente'
+            'message' => 'Erro ao deletar o livro'
         ], 500);
     }
 }
